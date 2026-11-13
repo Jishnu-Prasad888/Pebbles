@@ -1,0 +1,10 @@
+{
+	"name": "Pebbles",
+	"version": "1.0.0",
+	"minAppVersion": "1.13.0",
+	"author": "Velocity UI by Floodlight, colours from Forest Night by Forrest Knight",
+	"modes": [
+		"dark",
+		"light"
+	]
+}
