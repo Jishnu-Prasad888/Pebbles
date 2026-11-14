@@ -1,0 +1,178 @@
+
+
+/* ==========================================================================
+   PEBBLES — new-tab page ("No file is open" / Create new note, Go to file …)
+   • Only touches the empty tab. Notes, sidebars and the rest are unchanged.
+   • Desktop only. Dark mode gets the picture; light mode gets the tile styling.
+   • Tune the look with the variables right below.
+   ========================================================================== */
+@media screen{
+
+body:not(.is-mobile){
+	--pebbles-empty-scrim-top: 0.04;      /* darkening at the top of the picture  (0 = none)  */
+	--pebbles-empty-scrim-bottom: 0.34;   /* darkening at the bottom of the picture           */
+	--pebbles-empty-vignette: 0.30;       /* soft dark pool behind the buttons, for legibility */
+	--pebbles-empty-saturate: 1.08;       /* picture colour boost                              */
+	--pebbles-empty-title: block;         /* "No file is open" heading — set to none to hide   */
+	--pebbles-empty-tile-alpha: 58%;      /* button glass opacity (higher = more solid)        */
+	--pebbles-empty-blur: 14px;           /* button glass blur                                 */
+}
+
+/* ---------- the picture: drawn inside the empty tab, above the frosted pane ---------- */
+body.theme-dark.theme-dark:not(.is-mobile) .workspace-leaf-content[data-type=empty]{
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+}
+body.theme-dark.theme-dark:not(.is-mobile) .workspace-leaf-content[data-type=empty]::before{
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+	background-image:
+		radial-gradient(ellipse 62% 58% at 50% 48%, rgb(4 16 10 / var(--pebbles-empty-vignette)), transparent 100%),
+		linear-gradient(to bottom, rgb(4 16 10 / var(--pebbles-empty-scrim-top)), rgb(4 16 10 / var(--pebbles-empty-scrim-bottom))),
+		var(--pebbles-image);
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	filter: saturate(var(--pebbles-empty-saturate));
+	animation: pebbles-empty-fade 700ms ease-out backwards;
+}
+
+/* ---------- layout: a centred column, a touch above the middle ---------- */
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+}
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-container{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 22px;
+	width: 100%;
+	max-width: 620px;
+	padding: 24px 24px 7vh;
+	box-sizing: border-box;
+}
+
+/* ---------- title ---------- */
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-title{
+	display: var(--pebbles-empty-title);
+	margin: 0;
+	font-size: 22px;
+	font-weight: var(--font-light, 350);
+	letter-spacing: 0.02em;
+	color: var(--color-base-100, var(--text-normal));
+	text-shadow: 0 1px 16px rgb(0 0 0 / 0.55);
+	animation: pebbles-empty-rise 420ms var(--vl-ease-out, ease-out) backwards;
+}
+
+/* ---------- actions: frosted glass tiles, icon over label ---------- */
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list{
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+	gap: 12px;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	box-sizing: border-box;
+	width: auto;
+	height: auto;
+	min-height: 108px;
+	padding: 18px 12px 16px;
+	border-radius: var(--pebbles-radius-lg, 12px);
+	color: var(--text-normal);
+	font-size: 13px;
+	font-weight: var(--font-medium, 500);
+	line-height: 1.35;
+	text-align: center;
+	text-wrap: balance;
+	text-shadow: 0 1px 6px rgb(0 0 0 / 0.35);
+	cursor: pointer;
+	filter: none;
+	background-color: color-mix(in oklab, var(--background-primary) var(--pebbles-empty-tile-alpha), transparent);
+	-webkit-backdrop-filter: blur(var(--pebbles-empty-blur)) saturate(1.2);
+	backdrop-filter: blur(var(--pebbles-empty-blur)) saturate(1.2);
+	box-shadow:
+		inset 0 0 0 1px var(--trans-faint-30, rgb(128 128 128 / 0.25)),
+		0 8px 24px rgb(0 0 0 / 0.22);
+	transition:
+		transform 160ms var(--vl-ease-out, ease-out),
+		background-color 160ms var(--vl-ease-out, ease-out),
+		box-shadow 160ms var(--vl-ease-out, ease-out);
+	animation: pebbles-empty-rise 420ms var(--vl-ease-out, ease-out) backwards;
+}
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action:nth-of-type(1){animation-delay: 40ms}
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action:nth-of-type(2){animation-delay: 90ms}
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action:nth-of-type(3){animation-delay: 140ms}
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action:nth-of-type(4){animation-delay: 190ms}
+
+/* icon (re-declared so it works with or without Obsidian's .tappable class) */
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action::before{
+	content: "";
+	display: block;
+	flex: none;
+	width: 26px;
+	height: 26px;
+	transform: none;
+	background-color: currentColor;
+	-webkit-mask-image: var(--empty-state-icon);
+	-webkit-mask-position: 50% 50%;
+	-webkit-mask-size: 100%;
+	-webkit-mask-repeat: no-repeat;
+	opacity: 0.85;
+	transition: opacity 160ms var(--vl-ease-out, ease-out), background-color 160ms var(--vl-ease-out, ease-out);
+}
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action:nth-of-type(1)::before,
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action.mod-close::before{
+	-webkit-mask-size: 112.5%;
+}
+
+/* hover / press / keyboard focus */
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action:hover{
+	transform: translateY(-2px);
+	background-color: color-mix(in oklab, var(--background-primary) calc(var(--pebbles-empty-tile-alpha) + 22%), transparent);
+	box-shadow:
+		inset 0 0 0 1px var(--color-accent-1, var(--interactive-accent)),
+		0 0 0 3px var(--color-accent-3, transparent),
+		0 12px 30px rgb(0 0 0 / 0.3);
+}
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action:hover::before{
+	opacity: 1;
+}
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action:not(.mod-close):hover::before{
+	background-color: var(--color-accent-1, var(--interactive-accent));
+}
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action:active{
+	transform: translateY(0) scale(0.98);
+}
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action:focus-visible{
+	outline: 2px solid var(--color-accent-1, var(--interactive-accent));
+	outline-offset: 2px;
+}
+
+/* Close: same tile, just a little quieter until you reach for it */
+body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action.mod-close:not(:hover){
+	background-color: color-mix(in oklab, var(--background-primary) calc(var(--pebbles-empty-tile-alpha) - 14%), transparent);
+}
+
+@keyframes pebbles-empty-fade{ from{opacity: 0} to{opacity: 1} }
+@keyframes pebbles-empty-rise{ from{opacity: 0; transform: translateY(8px)} to{opacity: 1; transform: none} }
+
+@media (prefers-reduced-motion: reduce){
+	body:not(.is-mobile) .workspace-leaf-content[data-type=empty]::before,
+	body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-title,
+	body:not(.is-mobile) .workspace-leaf-content[data-type=empty] .empty-state-action-list>.empty-state-action{animation: none}
+}
+}

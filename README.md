@@ -1,6 +1,10 @@
 # Pebbles
 
-You can find the demo images for the in the pics folder
+## Demo
+
+![Demo 1](pics/2026-11-13_07-27.png)
+![Demo 2](pics/2026-11-13_07-28.png)
+![Demo 3](pics/2026-11-13_07-28_1.png)
 
 # usage : 
 
